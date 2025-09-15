@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>STPI Kakinada</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        font-family: "Open Sans", sans-serif;
+        background: #e5e5e5;
+        overflow-x: hidden;
+      }
+      #header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 30px;
+        background: linear-gradient(135deg, #7a5fff, #01c8ee);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        position: relative;
+        z-index: 2;
+      }
+      #header-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+      #header img {
+        height: 80px;
+        animation: floatLogo 4s ease-in-out infinite;
+      }
+      @keyframes floatLogo {
+        30%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-6px);
+        }
+      }
+      #header h1 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+        color: white;
+      }
+      #tabs {
+        display: flex;
+        gap: 100px;
+      }
+      #tabs a {
+        text-decoration: none;
+        color: white;
+        font-weight: bold;
+        font-size: 20px;
+        position: relative;
+        padding: 5px 20px;
+        transition: color 0.3s ease;
+      }
+      #tabs a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -5px;
+        width: 0%;
+        height: 3px;
+        border-radius: 2px;
+        transition: width 0.3s ease;
+      }
+      #tabs a:hover {
+        color: #000000;
+        background: rgb(4, 214, 230);
+        transform: scale(1.2);
+        z-index: 1;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s;
+        border-radius: 30px;
+      }
+      #tabs a:hover::after {
+        width: 100%;
+      }
+
+      #scroll {
+        font-size: 22px;
+        font-weight: bold;
+        text-align: center;
+        background: #f2f2f2;
+        padding: 10px;
+        letter-spacing: 1px;
+        position: relative;
+        z-index: 2;
+      }
+
+      #imagescroll {
+        position: fixed;
+        top: 160px;
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 220px);
+        overflow: hidden;
+        background: #e5e5e5;
+        z-index: 1;
+      }
+      #imagescroll img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transform: scale(1.05);
+        transition: opacity 1s ease, transform 5s ease;
+      }
+      #imagescroll img.active {
+        opacity: 1;
+        transform: scale(1.15);
+        animation: slideIn 1s ease forwards;
+        height: 800px;
+        padding-left: 10px;
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateX(30px) scale(1.1);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0) scale(1.15);
+          opacity: 1;
+        }
+      }
+      #footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(10px);
+        text-align: center;
+        padding: 15px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #111;
+        z-index: 2;
+        border-top: 2px solid rgba(255, 255, 255, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div id="header">
+        <div id="header-left">
+          <img src="stpilogo.png" alt="STPI Logo" id="image" />
+          <h1 style="text-align: center">Software Technology Parks of India</h1>
+        </div>
+        <div id="tabs">
+          <a href="/datacom.html">Data Com</a>
+          <a href="/incubation">Incubation</a>
+          <a href="/exim">Exim</a>
+          <a href="/projects">Projects</a>
+        </div>
+      </div>
+
+      <div id="scroll">
+        <marquee behavior="All" direction="left" scrollamount="12">
+          🚀 Welcome to STPI Kakinada | Driving Innovation & Growth 💡
+        </marquee>
+      </div>
+
+      <div id="imagescroll">
+        <img
+          src="https://stpi.in/sites/default/files/styles/main_banner_home/public/banner_images/stpi_coe_banner_1920x946.jpg?itok=2dCi5VEs"
+          class="active" height="900px"
+          alt=""
+        />
+        <img
+          src="https://stpi.in/sites/default/files/styles/main_banner_home/public/banner_images/IOT.jpg?itok=ZvB2Dj3L"
+          alt=""
+        />
+        <img
+          src="https://stpi.in/sites/default/files/styles/main_banner_home/public/banner_images/STPI-Ananta-Banner-1920x946.jpg?itok=gUG2qM42"
+          alt=""
+        />
+        <img
+          src="https://stpi.in/sites/default/files/styles/main_banner_home/public/banner_images/stpi_sayuj_banner_1920x946.jpg?itok=-a1Lx_19"
+          alt=""
+        />
+        <img
+          src="https://stpi.in/sites/default/files/styles/main_banner_home/public/banner_images/datacomm_1.jpg?itok=XbdppBTK"
+          alt=""
+        />
+        <img
+          src="https://stpi.in/sites/default/files/styles/main_banner_home/public/banner_images/STPI_incubation_banner_1920x946.jpg?itok=qyAbb0Ob"
+          alt=""
+        />
+        <img
+          src="https://stpi.in/sites/default/files/styles/main_banner_home/public/banner_images/SMART%20LAB.jpg?itok=EoGIO4Oa"
+          alt="" 
+        />
+      </div>
+
+      <div id="footer">© 2025 STPI Kakinada | All Rights Reserved</div>
+    </div>
+
+    <script>
+      const slides = document.querySelectorAll("#imagescroll img");
+      let index = 0;
+      function showSlide() {
+        slides.forEach((img, i) => {
+          img.classList.remove("active");
+          if (i === index) img.classList.add("active");
+        });
+        index = (index + 1) % slides.length;
+      }
+      setInterval(showSlide, 4000);
+    </script>
+  </body>
+</html>
