@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LAN Customers</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <style>
+      body,
+      html {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .action-btns {
+        display: none;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .company-profile:hover .action-btns {
+        display: flex;
+      }
+      .action-btn {
+        background: #ff5e62;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 6px 16px;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.2s;
+        margin: 0 2px;
+      }
+      .action-btn.update {
+        background: #43cea2;
+      }
+      .action-btn.delete:hover {
+        background: #b71c1c;
+      }
+      .action-btn.update:hover {
+        background: #185a9d;
+      }
+      body {
+        min-height: 100vh;
+        margin: 0;
+        background: linear-gradient(135deg, #0f2027, #2c5364, #1a2980, #26d0ce);
+        overflow-x: hidden;
+      }
+      #particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 0;
+        pointer-events: none;
+      }
+      #header {
+        text-align: center;
+        padding: 30px 10px 20px 10px;
+        font-size: 3em;
+        font-weight: bold;
+        background: linear-gradient(
+          90deg,
+          #ffe259,
+          #ffa751,
+          #43cea2,
+          #185a9d,
+          #ffe259
+        );
+        background-size: 200% auto;
+        color: transparent;
+        background-clip: text;
+        -webkit-background-clip: text;
+        animation: gradientText 3s linear infinite;
+        letter-spacing: 2px;
+        z-index: 2;
+        position: relative;
+      }
+      @keyframes gradientText {
+        0% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 100% 50%;
+        }
+      }
+      * {
+        text-decoration: none;
+        color: inherit;
+      }
+      #com {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 40px;
+        margin-top: 60px;
+        z-index: 2;
+        position: relative;
+      }
+      .company-profile {
+        background: rgba(255, 255, 255, 0.13);
+        border-radius: 22px;
+        box-shadow: 0 8px 32px 0 rgba(67, 206, 162, 0.18);
+        padding: 38px 36px 28px 36px;
+        min-width: 260px;
+        max-width: 320px;
+        text-align: center;
+        font-size: 1.18em;
+        font-weight: 500;
+        transition: transform 0.25s, box-shadow 0.25s, border 0.25s;
+        margin-bottom: 10px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+        border: 2px solid #43cea2;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 30vh;
+        color: white;
+        cursor: pointer;
+      }
+      .company-profile.new-profile {
+        border-color: #00b894;
+        background: rgba(0, 184, 148, 0.18);
+        color: #fff;
+      }
+      .company-logo {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #43cea2 40%, #185a9d 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 18px auto;
+        box-shadow: 0 2px 12px 0 #43cea280;
+        font-size: 2.2em;
+        color: #fff;
+        border: 3px solid #fff;
+        overflow: hidden;
+      }
+      .company-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+      .company-name {
+        font-size: 1.15em;
+        font-weight: 600;
+        color: white;
+        margin-bottom: 2px;
+        letter-spacing: 0.2px;
+      }
+      @media (max-width: 900px) {
+        #com {
+          gap: 20px;
+        }
+        .company-profile {
+          min-width: 80vw;
+          max-width: 90vw;
+        }
+      }
+      #back-btn {
+        position: fixed;
+        top: 50px;
+        left: 30px;
+        z-index: 100;
+        background: linear-gradient(135deg, #7a5fff, #01c8ee);
+        color: #fff;
+        border: none;
+        border-radius: 30px;
+        padding: 12px 28px;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        transition: background 0.3s, transform 0.2s;
+        outline: none;
+      }
+      #back-btn:hover {
+        background: linear-gradient(135deg, #01c8ee, #7a5fff);
+        color: #000;
+        transform: scale(1.08);
+      }
+      #modal-bg {
+        display: none;
+        position: fixed;
+        z-index: 200;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.4);
+        align-items: center;
+        justify-content: center;
+      }
+      #modal {
+        background: #fff;
+        border-radius: 18px;
+        padding: 32px 28px 24px 28px;
+        min-width: 320px;
+        max-width: 90vw;
+        box-shadow: 0 8px 32px 0 rgba(67, 206, 162, 0.18);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+        position: relative;
+      }
+      #modal h2 {
+        margin: 0 0 10px 0;
+        color: #185a9d;
+        font-size: 1.4em;
+      }
+      #modal label {
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 4px;
+        align-self: flex-start;
+      }
+      #modal input,
+      #modal textarea {
+        width: 100%;
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid #43cea2;
+        font-size: 1em;
+        margin-bottom: 10px;
+        resize: none;
+      }
+      #modal .modal-btns {
+        display: flex;
+        gap: 18px;
+        margin-top: 10px;
+      }
+      #modal .modal-btns button {
+        padding: 8px 22px;
+        border-radius: 8px;
+        border: none;
+        font-size: 1em;
+        font-weight: 700;
+        cursor: pointer;
+        background: linear-gradient(135deg, #43cea2, #185a9d);
+        color: #fff;
+        transition: background 0.2s;
+      }
+      #modal .modal-btns button:hover {
+        background: linear-gradient(135deg, #ffa751, #43cea2);
+        color: #222;
+      }
+      #modal .close-modal {
+        position: absolute;
+        top: 10px;
+        right: 16px;
+        font-size: 1.3em;
+        color: #888;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="details-modal-bg"
+      style="
+        display: none;
+        position: fixed;
+        z-index: 300;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(15, 32, 39, 0.95);
+        backdrop-filter: blur(8px);
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <div
+        id="details-modal"
+        style="
+          background: rgba(255, 255, 255, 0.18);
+          border-radius: 32px;
+          padding: 48px 38px;
+          min-width: 340px;
+          max-width: 600px;
+          box-shadow: 0 12px 48px rgba(67, 206, 162, 0.25);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 28px;
+          position: relative;
+          backdrop-filter: blur(16px);
+          border: 2px solid #43cea2;
+        "
+      >
+        <button
+          class="close-modal"
+          onclick="closeDetailsModal()"
+          style="
+            position: absolute;
+            top: 18px;
+            right: 28px;
+            font-size: 2em;
+            color: #fff;
+            background: none;
+            border: none;
+            cursor: pointer;
+          "
+        >
+          &times;
+        </button>
+        <div
+          style="
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #43cea2 40%, #185a9d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 24px #43cea280;
+            font-size: 3em;
+            color: #fff;
+            margin-bottom: 10px;
+          "
+        >
+          <i class="fas fa-building"></i>
+        </div>
+        <h2
+          id="details-title"
+          style="
+            color: #fff;
+            font-size: 2.2em;
+            text-shadow: 0 2px 12px #185a9d80;
+          "
+        ></h2>
+        <div
+          id="details-content"
+          style="
+            color: #fff;
+            font-size: 1.25em;
+            line-height: 1.7;
+            text-align: left;
+            width: 100%;
+            max-width: 420px;
+            background: rgba(0, 0, 0, 0.18);
+            border-radius: 18px;
+            padding: 24px 28px;
+            box-shadow: 0 2px 16px #185a9d30;
+          "
+        ></div>
+      </div>
+    </div>
+
+    <button id="back-btn" onclick="window.history.back()">← Back</button>
+    <canvas id="particles"></canvas>
+    <h1 id="header">LAN Customers</h1>
+    <div id="com">
+      <div class="company-profile new-profile" id="add-new-card" tabindex="0">
+        <div class="company-logo"><i class="fas fa-plus"></i></div>
+        <div class="company-name">Add New LAN Customer</div>
+      </div>
+    </div>
+
+    <div id="modal-bg">
+      <div id="modal">
+        <button class="close-modal" onclick="closeModal()">&times;</button>
+        <h2>Add New LAN Customer</h2>
+        <label for="new-company-name">Company Name</label>
+        <input
+          type="text"
+          id="new-company-name"
+          placeholder="Enter company name"
+        />
+
+        <label for="new-manager-name">Manager Name</label>
+        <input
+          type="text"
+          id="new-manager-name"
+          placeholder="Enter manager name"
+        />
+
+        <label for="new-manager-mobile">Manager Mobile Number</label>
+        <input
+          type="number"
+          id="new-manager-mobile"
+          placeholder="Enter manager mobile number"
+        />
+
+        <label for="new-assistant-name">Assistant Manager Name</label>
+        <input
+          type="text"
+          id="new-assistant-name"
+          placeholder="Enter assistant manager name"
+        />
+
+        <label for="new-assistant-mobile"
+          >Assistant Manager Mobile Number</label
+        >
+        <input
+          type="text  "
+          id="new-assistant-mobile"
+          placeholder="Enter assistant mobile number"
+        />
+
+        <label for="new-company-gmail">Company Gmail ID</label>
+        <input
+          type="email"
+          id="new-company-gmail"
+          placeholder="Enter company Gmail ID"
+        />
+
+        <label for="new-bandwidth">Bandwidth</label>
+        <input
+          type="text"
+          id="new-bandwidth"
+          placeholder="Enter bandwidth (e.g. 1 Gbps)"
+        />
+
+        <label for="new-ip-details">IP Details</label>
+        <input type="text" id="new-ip-details" placeholder="Enter IP details" />
+
+        <label for="new-prtg-link">PRTG Link</label>
+        <input type="text" id="new-prtg-link" placeholder="Enter PRTG link" />
+
+        <div class="modal-btns">
+          <button onclick="addCompany()">Add</button>
+          <button onclick="closeModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const canvas = document.getElementById("particles");
+      const ctx = canvas.getContext("2d");
+      let w = window.innerWidth,
+        h = window.innerHeight;
+      canvas.width = w;
+      canvas.height = h;
+      let particles = [];
+      for (let i = 0; i < 50; i++) {
+        particles.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: Math.random() * 2 + 1,
+          dx: (Math.random() - 0.5) * 0.7,
+          dy: (Math.random() - 0.5) * 0.7,
+          color: `hsla(${Math.random() * 360},80%,60%,0.7)`,
+        });
+      }
+      function drawParticles() {
+        ctx.clearRect(0, 0, w, h);
+        for (let p of particles) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = p.color;
+          ctx.shadowBlur = 12;
+          ctx.fill();
+        }
+      }
+      function updateParticles() {
+        for (let p of particles) {
+          p.x += p.dx;
+          p.y += p.dy;
+          if (p.x < 0 || p.x > w) p.dx *= -1;
+          if (p.y < 0 || p.y > h) p.dy *= -1;
+        }
+      }
+      function animate() {
+        drawParticles();
+        updateParticles();
+        requestAnimationFrame(animate);
+      }
+      animate();
+      window.addEventListener("resize", () => {
+        w = window.innerWidth;
+        h = window.innerHeight;
+        canvas.width = w;
+        canvas.height = h;
+      });
+
+      const modalBg = document.getElementById("modal-bg");
+      const addNewCard = document.getElementById("add-new-card");
+      function openModal() {
+        modalBg.style.display = "flex";
+        document
+          .querySelectorAll("#modal input")
+          .forEach((inp) => (inp.value = ""));
+        document.getElementById("new-company-name").focus();
+      }
+      function closeModal() {
+        modalBg.style.display = "none";
+      }
+      addNewCard.addEventListener("click", openModal);
+      addNewCard.addEventListener("keypress", (e) => {
+        if (e.key === "Enter" || e.key === " ") openModal();
+      });
+
+      const defaultCompanies = [
+        { name: "Daiwtech Pvt Ltd" },
+        { name: "M/s. Sunrays Informatics Pvt Ltd" },
+        { name: "M/s. KPCS Systems" },
+        { name: "M/s. Sykam Consultancy Services Pvt Ltd" },
+        { name: "M/s. Princeton IT" },
+        { name: "Prime Soft" },
+        { name: "M/s. White Feather Technologies" },
+      ];
+
+      function getStoredCompanies() {
+        let data = localStorage.getItem("lanCompanies");
+        let arr = null;
+        if (!data) {
+          arr = defaultCompanies;
+          localStorage.setItem("lanCompanies", JSON.stringify(arr));
+        } else {
+          try {
+            arr = JSON.parse(data);
+          } catch {
+            arr = null;
+          }
+          if (Array.isArray(arr) && arr.length === 0) {
+            arr = defaultCompanies;
+            localStorage.setItem("lanCompanies", JSON.stringify(arr));
+          }
+        }
+        return arr;
+      }
+      function setStoredCompanies(arr) {
+        localStorage.setItem("lanCompanies", JSON.stringify(arr));
+      }
+
+      function renderCompanies() {
+        const comDiv = document.getElementById("com");
+        Array.from(comDiv.querySelectorAll(".company-profile")).forEach(
+          (el) => {
+            if (!el.classList.contains("new-profile")) el.remove();
+          }
+        );
+        const companies = getStoredCompanies();
+        if (companies && companies.length) {
+          companies.forEach((c, i) => {
+            const card = document.createElement("div");
+            card.className = "company-profile profile" + ((i % 7) + 1);
+            card.innerHTML = `
+            <div class="company-logo"><i class="fas fa-briefcase"></i></div>
+            <div class="company-name">${c.name}</div>
+            <div class="action-btns">
+              <button class="action-btn update" onclick="updateCard(${i})">Update</button>
+              <button class="action-btn delete" onclick="deleteCard(${i})">Delete</button>
+            </div>`;
+            card.addEventListener("click", function (e) {
+              if (e.target.closest(".action-btns")) return;
+              showDetailsModal(i);
+            });
+            comDiv.insertBefore(card, addNewCard);
+          });
+        }
+      }
+
+      function showDetailsModal(idx) {
+        const companies = getStoredCompanies();
+        const c =
+          companies && companies[idx] ? companies[idx] : { name: "Unknown" };
+        document.getElementById("details-title").textContent = c.name;
+        const html = `
+        <b>Manager Name:</b> ${c.manager || "-"}<br>
+        <b>Manager Mobile:</b> ${c.managerMobile || "-"}<br>
+        <b>Assistant Manager Name:</b> ${c.assistant || "-"}<br>
+        <b>Assistant Manager Mobile:</b> ${c.assistantMobile || "-"}<br>
+        <b>Company Gmail ID:</b> ${c.gmail || "-"}<br>
+        <b>Bandwidth:</b> ${c.bandwidth || "-"}<br>
+        <b>IP Details:</b> ${c.ip || "-"}<br>
+        ${
+          c.prtg
+            ? `<a href="${c.prtg}" target="_blank" style="display:inline-block;margin-top:12px;padding:8px 18px;background:linear-gradient(135deg,#43cea2,#185a9d);color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;">Prtg Graph</a>`
+            : ""
+        }
+      `;
+        document.getElementById("details-content").innerHTML = html;
+        document.getElementById("details-modal-bg").style.display = "flex";
+      }
+      function closeDetailsModal() {
+        document.getElementById("details-modal-bg").style.display = "none";
+      }
+
+      window.updateCard = function (idx) {
+        const companies = getStoredCompanies();
+        const c = companies[idx];
+        document.getElementById("new-company-name").value = c.name || "";
+        document.getElementById("new-manager-name").value = c.manager || "";
+        document.getElementById("new-manager-mobile").value =
+          c.managerMobile || "";
+        document.getElementById("new-assistant-name").value = c.assistant || "";
+        document.getElementById("new-assistant-mobile").value =
+          c.assistantMobile || "";
+        document.getElementById("new-company-gmail").value = c.gmail || "";
+        document.getElementById("new-bandwidth").value = c.bandwidth || "";
+        document.getElementById("new-ip-details").value = c.ip || "";
+        document.getElementById("new-prtg-link").value = c.prtg || "";
+        modalBg.style.display = "flex";
+        window._editIdx = idx;
+      };
+
+      window.deleteCard = function (idx) {
+        let companies = getStoredCompanies();
+        companies.splice(idx, 1);
+        setStoredCompanies(companies);
+        renderCompanies();
+      };
+
+      renderCompanies();
+
+      function addCompany() {
+        const name = document.getElementById("new-company-name").value.trim();
+        const manager = document
+          .getElementById("new-manager-name")
+          .value.trim();
+        const managerMobile = document
+          .getElementById("new-manager-mobile")
+          .value.trim();
+        const assistant = document
+          .getElementById("new-assistant-name")
+          .value.trim();
+        const assistantMobile = document
+          .getElementById("new-assistant-mobile")
+          .value.trim();
+        const gmail = document.getElementById("new-company-gmail").value.trim();
+        const bandwidth = document.getElementById("new-bandwidth").value.trim();
+        const ip = document.getElementById("new-ip-details").value.trim();
+        const prtg = document.getElementById("new-prtg-link").value.trim();
+        let companies = getStoredCompanies() || [];
+
+        if (
+          !name ||
+          !manager ||
+          !managerMobile ||
+          !assistant ||
+          !assistantMobile ||
+          !gmail ||
+          !bandwidth ||
+          !ip ||
+          !prtg
+        ) {
+          alert("All fields are required. Please fill in all details.");
+          return;
+        }
+        if (
+          typeof window._editIdx !== "number" &&
+          companies.some(
+            (c) => c.name && c.name.toLowerCase() === name.toLowerCase()
+          )
+        ) {
+          alert("This company already exists!");
+          return;
+        }
+        const companyObj = {
+          name,
+          manager,
+          managerMobile,
+          assistant,
+          assistantMobile,
+          gmail,
+          bandwidth,
+          ip,
+          prtg,
+        };
+        if (typeof window._editIdx === "number") {
+          companies[window._editIdx] = companyObj;
+          window._editIdx = undefined;
+        } else {
+          companies.push(companyObj);
+        }
+        setStoredCompanies(companies);
+        renderCompanies();
+        closeModal();
+      }
+      modalBg.addEventListener("click", (e) => {
+        if (e.target === modalBg) closeModal();
+      });
+    </script>
+  </body>
+</html>
